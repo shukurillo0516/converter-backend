@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "test-project-canal-servis",
+  "private_key_id": "eda825f5c013f7bd3bffd02babb43e0cc45f42b9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCpcSJIL+REie1O\nCtHpqIgsfW3nzj58XTspMwrkO/L1TT4wqoaMvu9lGhAnM00ho4NagnrJUke6P2of\n+1ToLc59LeAqSG+WVQWWYbZFcd7f/g2KrGAxa4IBGmDM6H2Tg3tsL4LQcb2VuxEB\nkRknXm159ECJtb1PmXM2OKUQ6PWVkt9aPM9GXvuvrmu3D06n7JiYgOkGv4Gn+Akd\nPW239F775DwDj3VUNKsWthGqqzdV2ZP63nnPjOtFPjHxDAfE1VxLDNd1BQc+l93O\nzqSc9wOtmEUdoXTb3tlE/oP3Jup761Gp8ZK7SMpb9BDOZ/wtxhwDqXM2p5NaNFOY\nP7o8KI9vAgMBAAECggEAUk1ion+ot+Xq/2JgDcfPxRRzwwm57jx21Q829h9sZtxL\nHeZmjozbyVb8i53ulC1RSzBfpdQyhPPyf3BcEJ7XUpRq8v7WPMY1fZMeruKdqF1F\nhJsv6jFXJ2QBquYuwO03kRgOyWLF/Kmtm/43opjKQldy1bESMEzP2oFvJCSTzT+L\nGepvDffybVk6aUtPwx3xeb/8se8PybQ1uYAp8Zu8py37wRcsFImdtZafF7qVLfhM\n7XmCAo+yY3waDVFCFUxaWUjDqJYTEh0Xq1t0psjAXdsJPYNNvE9/Z8xvXRP67bTk\nLKcS+K1yRJvtNAbEcGPcMZ5YdRdtajqYw3TwLS8yQQKBgQDr4BWdMbNTZGqicQix\nLbeyeve68wwB5M7OE5yhMolgyFewgO7YzZ66fLiK9DzfOuhAcAByZHuT9HzDh7go\nwyIBQrf6oqx3y4oFufi1FzabWGQZsj2hRSeE3ewceVJOmp3mc3jWkGIIqbkpIewo\nafGgDPxvWMYfs7v9qOm4peKk4QKBgQC35gglVLucBxJYnAE38a41DL2R4OC8xUav\nVbjdbV3yYV31V4wSJFC2bJ1pQpbN1dFuxjzXA1hDe4TSnGpvBItAzXSQgjOqo0fL\n1oBaWZ0wyDVwgO4VAVWtqHZhdsZh8sFDqoHXcJ0mH7Y/BJmL7L7CF/9XEs5IntaQ\nQTzetT9uTwKBgQCZC5WaoDPlyQLzkXn9VFebw/PXZnoFBIw25Dy9zweaN4PGL3JK\nU+hIwkIPTvfsM9Gcdc+kaZRRZNJLIFWahTocLUkoo8JaHEPbAVbhUUWKOCkDD0az\nzCYfLMtVklaYT/RiIcxnE9m4Gz/b83nCozM3ERX9vVEYIsu4g4/a0i+joQKBgQCX\nVxmxDzBuUWuJvKlMDvsc8WU5HmYVNAzd0qAWqiC8jeCzPd8qNvStjGlm7MQKlUKL\n9VywXjJPJuHCKbN1tbmcFPkuy9gVP9agK+DpegJg2QMRmSlV5AlMpuz1fLf6d7sR\nIstEL4tEiqiC6BgtDSJXvUQHtpRJM17EzMt5RJP1BQKBgQDgZjl4vx9KSrMjO0Bd\nieHysHQNfkpFPCnB0ryEo7jFsEy9dTZq4hKxsNW0OA0yDgvy9e9V7KLJjuuVP3+J\n9S0r0tmsYZ9fNEAe/IEarZoiBM+udTtr/+aIUx5vu+86cgq3WLHjwP2plO8QtQoF\nKOrlaflA/8HCkruzD0+u9BV8gg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "hello-823@test-project-canal-servis.iam.gserviceaccount.com",
+  "client_id": "108536007872686783132",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hello-823%40test-project-canal-servis.iam.gserviceaccount.com"
+}

@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  converterdb:
+    container_name: converterdb 
+    image: postgres
+    environment:
+      POSTGRES_DB: db_converter
+      POSTGRES_USER: converteruser
+      POSTGRES_PASSWORD: converterpass
+    volumes:
+      - postgres_data:/var/lib/postgresql/dataconverter/
+    ports:
+      - "5433:5432"
+    networks:
+      - converter_network
+
+  converterweb:
+    container_name: converterweb
+    build: .
+    command: python manage.py runserver 0.0.0.0:7777
+    volumes:
+      - .:/code
+    ports:
+      - "7777:7777"
+    depends_on:
+      - converterdb
+    env_file:
+      - ./.env.dev
+    networks:
+      - converter_network
+  
+  converter_redis:
+    image: redis:alpine
+    container_name: converter_redis
+    networks:
+      - converter_network
+  
+  celery:
+    build: .
+    command: celery -A converter worker -l info
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - converter_redis
+    networks:
+      - converter_network
+    links:
+      - converter_redis:converter_redis
+
+  celery-beat:
+    build: .
+    command: celery -A converter beat -l info
+    volumes:
+      - .:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - converter_redis
+    networks:
+      - converter_network
+
+volumes:
+  postgres_data:
+
+networks:
+  converter_network:
