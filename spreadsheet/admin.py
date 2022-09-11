@@ -1,7 +1,7 @@
 from ast import Or
 from re import A
 from django.contrib import admin
-from .models import Order, Row
+from .models import Order, Row, CurrencyTracker
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -12,3 +12,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Row)
+admin.site.register(CurrencyTracker)

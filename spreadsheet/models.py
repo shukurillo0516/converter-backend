@@ -1,13 +1,26 @@
+from locale import currency
 from statistics import mode
 from tabnanny import verbose
 from django.db import models
 from core.models import TimestampedModel
 
 
+class CurrencyTracker(TimestampedModel):
+    currency_code = models.CharField(max_length=4)
+    currency_val_in_ruble = models.DecimalField(
+        max_digits=15, decimal_places=2)
+
+    def __str__(self) -> str:
+        return f"id {self.id}"
+
+
 class Row(TimestampedModel):
     row_id = models.PositiveIntegerField(default=1)
     update_end_row = models.PositiveIntegerField(default=0)
     end_row = models.PositiveIntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"id {self.id}"
 
 
 class Order(TimestampedModel):
@@ -25,3 +38,6 @@ class Order(TimestampedModel):
     class Meta:
         verbose_name = "заказ"
         verbose_name_plural = "заказы"
+
+    def __str__(self) -> str:
+        return f"Order id {self.id}"

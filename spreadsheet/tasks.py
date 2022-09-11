@@ -15,4 +15,4 @@ def get_orders_data():
     This function is peridiocally  called by celery beat
     """
     google_sheet = GoogleSpreadsheet()
-    print(google_sheet.main_handler(), datetime.datetime.now())
+    google_sheet.main_handler()

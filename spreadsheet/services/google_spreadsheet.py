@@ -1,3 +1,4 @@
+from locale import currency
 import os
 import datetime
 from decimal import Decimal
@@ -6,14 +7,15 @@ import gspread
 import requests
 
 from django.conf import settings
-from spreadsheet.models import Row, Order
+from spreadsheet.models import Row, Order, CurrencyTracker
+from django.utils import timezone
 
 
 BASE_DIR = settings.BASE_DIR
 
 
 def get_current_date():
-    now = datetime.datetime.now()
+    now = timezone.now()
     return now.strftime("%d/%m/%Y")
 
 
@@ -95,28 +97,68 @@ class GoogleSpreadsheet(SpreadsheetDataRetrieverMixin):
             self.row.save()
 
     def check_and_update_rows(self):
-        for row_number, row in enumerate(self.rows):
-            row_number += 2
-            try:
-                order = Order.objects.get(row_number=row_number)
-            except Order.DoesNotExist:
+        update_end_row = self.row.update_end_row
+        end_row = self.row.end_row
+        if update_end_row > end_row:
+            self.row.update_end_row = end_row
+            self.row.save()
+            update_end_row = end_row
+
+        for row_number in range(update_end_row):
+            row_values = self.values[row_number]
+            row_number += 1
+
+            if row_values != ['№', 'заказ №', 'стоимость,$', 'срок поставки']:
                 try:
-                    delivery_time = russian_date_to_english(row[3])
-                    order = Order(
-                        row_number=row_number,
-                        number=row[0],
-                        order_number=row[1],
-                        price_dollar=row[2],
-                        delivery_time=delivery_time
-                    )
-                    order.save()
-                except Exception as err:
-                    print(err)
+                    order = Order.objects.get(row_number=row_number)
+                    changed = False
+                    delivery_time = russian_date_to_english(row_values[3])
+                    price_ruble = self.dollar_rate * \
+                        Decimal(
+                            row_values[2]) if row_values[2] and self.dollar_rate else 0
+
+                    if order.number != row_values[0]:
+                        order.number = row_values[0]
+                        changed = True
+                    if order.order_number != row_values[1]:
+                        order.order_number = row_values[1]
+                        changed = True
+                    if order.price_dollar != row_values[2]:
+                        order.price_dollar = row_values[2]
+                        changed = True
+                    if order.price_ruble != price_ruble:
+                        order.price_ruble = price_ruble
+                        changed = True
+                    if order.delivery_time != delivery_time:
+                        order.delivery_time = delivery_time
+                        changed = True
+
+                    if changed:
+                        order.save()
+                except Exception as e:
+                    print(e.args, "check_and_update_rows")
+        if end_row != update_end_row:
+            self.row.update_end_row = end_row
+            self.row.save()
 
     def main_handler(self):
-        self.dollar_rate = get_dollar_rate()
+        try:
+            usd = CurrencyTracker.objects.get(currency_code="usd")
+            if usd.updated_at + datetime.timedelta(hours=12) < timezone.now():
+                usd.currency_val_in_ruble = get_dollar_rate()
+                usd.save()
+            self.dollar_rate = usd.currency_val_in_ruble
+
+        except CurrencyTracker.DoesNotExist:
+            dollar_rate = get_dollar_rate()
+            usd = CurrencyTracker(
+                currency_code="usd",
+                currency_val_in_ruble=dollar_rate
+            )
+            usd.save()
+            self.dollar_rate = dollar_rate
+
         self.values = self.get_values()
         self.rows_length = len(self.values)
-        print(self.rows_length, "self.rows_length")
         self.delete_or_add_rows()
-        pass
+        self.check_and_update_rows()
