@@ -1,5 +1,6 @@
 import os
 import datetime
+from decimal import Decimal
 
 import gspread
 import requests
@@ -28,7 +29,10 @@ def get_dollar_rate(date=None):
     val_tag = data.find(r"<Value>") + len("<Value>")
     val_tag_end = data.find(r"</Value>")
     usd_course = data[val_tag:val_tag_end]
-    return usd_course
+    if usd_course:
+        usd_course = usd_course.replace(".", "").replace(",", ".")
+
+    return Decimal(usd_course)
 
 
 def russian_date_to_english(date):
@@ -69,20 +73,20 @@ class GoogleSpreadsheet(SpreadsheetDataRetrieverMixin):
             self.row.end_row = self.rows_length
             self.row.save()
         elif end_row < self.rows_length:
-            # if new rows added save them to db
+            # if new rows added, save them to db
             for row_no in range(end_row, self.rows_length):
                 row_values = self.values[row_no]
                 if row_values != ['№', 'заказ №', 'стоимость,$', 'срок поставки']:
                     delivery_time = russian_date_to_english(row_values[3])
-                    # dollar_rate = get_dollar_rate(delivery_time)
-                    # price_ruble = dollar_rate * \
-                    #     row_values[2] if row_values[2] and dollar_rate else 0
+                    price_ruble = self.dollar_rate * \
+                        Decimal(
+                            row_values[2]) if row_values[2] and self.dollar_rate else 0
 
                     order = Order(row_number=row_no+1,
                                   number=row_values[0],
                                   order_number=row_values[1],
                                   price_dollar=row_values[2],
-                                  #   price_ruble=price_ruble,
+                                  price_ruble=price_ruble,
                                   delivery_time=delivery_time
                                   )
                     order.save()
@@ -110,6 +114,7 @@ class GoogleSpreadsheet(SpreadsheetDataRetrieverMixin):
                     print(err)
 
     def main_handler(self):
+        self.dollar_rate = get_dollar_rate()
         self.values = self.get_values()
         self.rows_length = len(self.values)
         print(self.rows_length, "self.rows_length")
