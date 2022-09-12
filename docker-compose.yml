@@ -18,7 +18,9 @@ services:
   converterweb:
     container_name: converterweb
     build: .
-    command: python manage.py runserver 0.0.0.0:7777
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:7777"
     volumes:
       - .:/code
     ports:
@@ -29,7 +31,7 @@ services:
       - ./.env.dev
     networks:
       - converter_network
-  
+
   converter_redis:
     image: redis:alpine
     container_name: converter_redis
@@ -38,13 +40,14 @@ services:
   
   celery:
     build: .
-    command: celery -A converter worker -l info
+    command: celery -A converter worker --concurrency=1 -l info
     volumes:
       - .:/code
     env_file:
       - ./.env.dev
     depends_on:
       - converter_redis
+      - converterweb
     networks:
       - converter_network
     links:
@@ -59,6 +62,7 @@ services:
       - ./.env.dev
     depends_on:
       - converter_redis
+      - converterweb
     networks:
       - converter_network
 
